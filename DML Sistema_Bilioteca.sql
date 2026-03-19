@@ -51,6 +51,29 @@ select * from historico_emprestimos;
 insert into avaliacoes (id_livro, id_usuario, nota, comentario) 
 values (1, 3, 5, 'Nunca li, mas parece bom!');
 
+-- Ajustando as datas das multas para Março de 2026 
+-- (Garante que a procedure encontre os dados no filtro de mês/ano)
+update multas 
+set data_geracao = '2026-03-15 10:00:00' 
+where id_multa > 0;
+
+-- Simulando que a Ana Oliveira já pagou a multa dela
+-- (Para testar se a soma do 'Total Arrecadado' está funcionando)
+update multas 
+set status_pagamento = 'Pago' 
+where id_usuario = 2 
+limit 1;
+
+-- Inserindo uma multa extra pendente para o Bruno Costa
+-- (Para dar volume ao relatório de 'Total em Aberto')
+insert into multas (id_usuario, id_livro, valor_total, dias_atraso, status_pagamento, data_geracao)
+values (3, 1, 15.00, 5, 'Pendente', '2026-03-18 14:00:00');
+
+-- EXECUTANDO O TESTE FINAL
+
+-- Chama o fechamento de Março/2026
+call sp_fechamento_financeiro_mensal(3, 2026);
+
 -- Isso deve FUNCIONAR
 -- Pois o usuário 1 já devolveu o livro 1 (no teste anterior)
 insert into avaliacoes (id_livro, id_usuario, nota, comentario) 
