@@ -1,4 +1,4 @@
-use * Sistema_Biblioteca;
+use Sistema_Biblioteca;
 
 -- Inserindo Autores
 insert into autores (nome_autor, nacionalidade) values 
