@@ -179,6 +179,48 @@ end if;
 end //
 delimiter ;
 
+-- Criação da procedure de consulta de fechamento referente ao mês e o ano escolhido
+
+delimiter //
+
+create procedure sp_fechamento_financeiro_mensal(
+in p_mes int,
+in p_ano int
+)
+begin
+declare v_total_pago decimal(10,2) default 0.00;
+declare v_total_pendente decimal(10,2) default 0.00;
+declare v_qnt_multas int default 0;
+
+select sum(valor_total) into v_total_pago
+from multas
+where month(data_geracao) = p_mes
+and year(data_geracao) = p_ano
+and status_pagamento = 'Pago' ;
+
+select sum(valor_total) into v_total_pendente
+from multas
+where month(data_geracao) = p_mes
+and year(data_geracao) = p_ano
+and status_pagamento = 'Pendente' ;
+
+select count(*) into v_qnt_multas
+from multas
+where month(data_geracao) = p_mes
+and year(data_geracao) = p_ano;
+
+select 
+p_mes as 'Mês referência',
+p_ano as 'Ano referência',
+v_qnt_multas as 'Quantidade de ocorrências',
+ifnull(v_total_pago, 0) as 'Total arrecadado (R$)',
+ifnull(v_total_pendente,0) as 'Total em aberto (R$)',
+(ifnull(v_total_pago, 0) + ifnull(v_total_pendente, 0)) as 'Faturamento Previsto (R$)';
+end//
+
+delimiter ;
+
+
 -- Ligação de Livros x Autores de ambas as tabelas respectivamante as suas colunas da tabela livro_autor
 select livros.titulo, autores.nome_autor 
 from livros 
