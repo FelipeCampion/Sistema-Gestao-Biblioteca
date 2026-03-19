@@ -4,6 +4,9 @@ collate utf8mb4_0900_ai_ci;
 
 use Sistema_Biblioteca;
 
+-- Criação de tabelas
+
+-- Criação da tabela de usuários
 create table usuarios(
 id_usuario int auto_increment primary key,
 nome varchar(100) not null,
@@ -11,6 +14,7 @@ email varchar(100) unique not null,
 data_cadastro timestamp default current_timestamp
 );
 
+-- Criação da tabela de livros
 create table livros(
 id_livro int auto_increment primary key,
 titulo varchar(200) not null,
@@ -19,18 +23,21 @@ ano_publicacao int,
 quant_disponivel int default 1
 );
 
+-- Criação da tabela de autores
 create table autores(
 id_autor int auto_increment primary key,
 nome_autor varchar(100) not null,
 nacionalidade varchar(50) null default 'Desconhecida'
 );
 
+-- Criação da tabela relacional para Autores x Livros
 create table livro_autor(
 primary key (id_livro, id_autor),
 id_livro int,
 id_autor int
 );
 
+-- Criação da tabela de emprestimos
 create table emprestimos(
 id_emprestimo int auto_increment primary key,
 id_livro int,
@@ -40,6 +47,7 @@ data_devolucao_prevista date not null,
 status enum('Ativo', 'Devolvido', 'Atrasado') default 'Ativo'
 );
 
+-- Criação da tabela de registro do histórico de emprestimos
 create table historico_emprestimos(
 id_historico int auto_increment primary key,
 id_livro int,
@@ -48,6 +56,7 @@ data_emprestimo date not null,
 status enum('Ativo', 'Devolvido', 'Atrasado') default 'Ativo'
 );
 
+-- Criação da tabela de registro de multas
 create table multas(
 id_multa int auto_increment primary key,
 id_usuario int,
@@ -58,6 +67,7 @@ dias_atraso int,
 status_pagamento enum('Pendente', 'Pago') not null default 'Pendente'
 );
 
+-- Criação da tabela de registro de avaliações de usuários
 create table avaliacoes(
 id_avaliacao int auto_increment primary key,
 id_livro int not null,
@@ -67,7 +77,7 @@ comentario text,
 data_avaliacao timestamp default current_timestamp
 );
 
--- PONTES 
+-- Criação das Foreign Keys (Pontes de ligação)
 
 Alter table livro_autor
 add foreign key (id_livro) references livros (id_livro) on delete cascade,
@@ -90,6 +100,7 @@ add constraint fk_ava_usu foreign key (id_usuario) references usuarios (id_usuar
 add constraint fk_ava_livro foreign key (id_livro) references livros (id_livro),
 add constraint chk_nota check (nota >= 1 and nota <= 5);
 
+-- Criação do monitoramento de estoque vazio
 delimiter //
 
 create trigger trg_monitorar_estoque_vazio
@@ -110,6 +121,7 @@ set message_text =  'Livro indisponível em estoque';
 end //
 delimiter ;
 
+-- Criação do gatilho de Upload na quantidade de estoque
 delimiter //
 create trigger trg_monitorar_emprestimos
 after insert on emprestimos
@@ -119,6 +131,7 @@ update livros set quant_disponivel = quant_disponivel - 1 where id_livro = new.i
 end //
 delimiter ;
 
+-- Criação do gatilho de cauculo de multas para emprestimos fora do prazo de devolução
 delimiter //
 
 create trigger trg_calculo_multa
@@ -145,6 +158,7 @@ where id_livro = old.id_livro;
 end //
 delimiter ;
 
+-- Criação do gatilho de validação de possibilidade de avaliação dos usuários
 delimiter //
 
 create trigger trg_validar_avaliacao
@@ -165,6 +179,7 @@ end if;
 end //
 delimiter ;
 
+-- Ligação de Livros x Autores de ambas as tabelas respectivamante as suas colunas da tabela livro_autor
 select livros.titulo, autores.nome_autor 
 from livros 
 join livro_autor on livros.id_livro = livro_autor.id_livro
