@@ -80,12 +80,12 @@ data_avaliacao timestamp default current_timestamp
 -- Criação das Foreign Keys (Pontes de ligação)
 
 Alter table livro_autor
-add foreign key (id_livro) references livros (id_livro) on delete cascade,
-add foreign key (id_autor) references autores (id_autor) on delete cascade;
+add constraint fk_liv_aut_liv foreign key (id_livro) references livros (id_livro) on delete cascade,
+add constraint fk_liv_aut_aut foreign key (id_autor) references autores (id_autor) on delete cascade;
 
 alter table emprestimos
-add foreign key (id_livro) references livros (id_livro),
-add foreign key (id_usuario) references usuarios (id_usuario);
+add constraint fk_emp_liv foreign key (id_livro) references livros (id_livro),
+add constraint fk_emp_usu foreign key (id_usuario) references usuarios (id_usuario);
 
 alter table historico_emprestimos
 add constraint id_livro_h foreign key (id_livro) references livros (id_livro) on delete set null,
