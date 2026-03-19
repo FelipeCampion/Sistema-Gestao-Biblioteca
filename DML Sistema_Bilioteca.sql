@@ -1,3 +1,5 @@
+use * Sistema_Bibliote;
+
 -- Inserindo Autores
 insert into autores (nome_autor, nacionalidade) values 
 ('Machado de Assis', 'Brasileira'),
