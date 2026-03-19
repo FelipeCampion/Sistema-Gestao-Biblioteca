@@ -22,7 +22,7 @@ Repositório contendo a arquitetura de banco de dados relacional para o gerencia
 * **Cálculo de Atraso:** Ao encerrar um empréstimo, o sistema calcula via Trigger (`DATEDIFF`) a diferença entre a data atual e a prevista, gerando automaticamente um registro na tabela de `multas` com o valor devido.
 * **Auditoria Permanente:** Todos os movimentos são espelhados em uma tabela de `historico_emprestimos`, garantindo que nenhum dado de circulação seja perdido após a devolução.
 
-### 3. Business Intelligence com Stored Procedures 💎
+### 3. Business Intelligence com Stored Procedures 
 O sistema conta com a procedure `sp_fechamento_financeiro_mensal`, que permite ao gestor obter um relatório consolidado de faturamento com apenas um comando. O relatório inclui:
 * Total de multas geradas no mês/ano selecionado.
 * Montante total já arrecadado (**Pago**).
