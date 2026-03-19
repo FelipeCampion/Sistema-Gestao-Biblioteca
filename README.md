@@ -1,27 +1,43 @@
-# Sistema-Gestão-Biblioteca
-Banco de Dados MySQL para gerenciamento de bibliotecas com foco em regras de negócio e integridade. Implementação de automações para controle de acervo, fluxo de empréstimos, cálculo de multas por atraso e arquitetura normalizada para rastreabilidade de exemplares e usuários. 📚📖⚙️
+Sistema-Gestão-Biblioteca
+Banco de Dados MySQL de Alta Integridade com Automação Procedural e BI. 📊📚
 
-*Sistema-Gestao-Biblioteca*
+Este repositório contém uma arquitetura robusta de banco de dados relacional voltada para o gerenciamento de acervos, usuários e fluxos financeiros de uma biblioteca. O projeto se destaca pela implementação de regras de negócio diretamente na camada de dados, garantindo consistência e automação total.
 
-Repositório contendo a arquitetura de banco de dados relacional para o gerenciamento de acervos literários, usuários e controle de circulação de exemplares. O projeto foca em integridade referencial e automação de regras de negócio.
+Diferenciais Técnicos
+Engine: MySQL 8.0+
 
-Especificações Técnicas
-Engine: MySQL 8.0
+Arquitetura: Normalização avançada (3NF) para rastreabilidade total.
 
-Objetos: Tabelas normalizadas, Constraints (Chaves Estrangeiras e Unicidade), Triggers de Status.
+Camada de Inteligência: Uso de Stored Procedures para relatórios financeiros e Triggers para automação de estoque e multas.
 
-Modelagem: Estrutura preparada para suporte a múltiplos exemplares, categorias de obras e histórico de movimentações.
+Integridade Proativa: Travas de segurança que impedem inconsistências (ex: avaliar livros não lidos ou emprestar itens sem estoque).
 
-Funcionalidades Implementadas
-Gestão de Acervo: Cadastro detalhado de obras, autores e editoras com controle de disponibilidade por exemplar.
+Funcionalidades e Automações
+1. Gestão Inteligente de Acervo (Triggers)
+Controle de Estoque Real-time: O campo quant_disponivel é atualizado automaticamente via gatilhos (AFTER INSERT / BEFORE DELETE), impedindo empréstimos de itens indisponíveis.
 
-Controle de Empréstimos: Sistema de registro de datas de saída e previsão de entrega, garantindo a rastreabilidade do item.
+Validação de Avaliações: Uma regra de integridade garante que apenas usuários que efetivamente concluíram um empréstimo possam registrar uma nota/comentário para a obra.
 
-Automação de Status: Gatilhos configurados para atualizar automaticamente a disponibilidade do livro (Disponível/Emprestado) no momento da transação.
+2. Fluxo de Multas e Histórico
+Cálculo Automático de Atraso: Ao encerrar um empréstimo, o sistema calcula via Trigger a diferença entre a data atual e a data prevista, gerando automaticamente um registro na tabela de multas com o valor devido.
 
-Integridade de Usuários: Validação de cadastros e vínculos de empréstimos ativos para evitar inconsistências no banco de dados.
+Auditoria Permanente: Todos os movimentos são espelhados em uma tabela de historico_emprestimos para consultas futuras de comportamento do usuário.
 
-Instruções de Uso:
-- Certifique-se de que o ambiente MySQL esteja configurado corretamente.
-- Execute o script de definição de dados (DDL) para criar o Schema e a estrutura de tabelas.
-- Utilize o script de manipulação de dados (DML) para popular o banco com registros iniciais de teste e validar as chaves estrangeiras.
+3. Business Intelligence (Stored Procedure) 
+Fechamento Financeiro Mensal: Implementação da procedure sp_fechamento_financeiro_mensal.
+
+Com apenas um comando, o gestor obtém um relatório consolidado contendo:
+
+Total de multas geradas no mês.
+
+Montante já arrecadado (Pago).
+
+Valores pendentes em aberto.
+
+Previsão de faturamento total.
+
+📂 Instruções de Uso
+Instalação: Execute o script SQL completo para criar o Schema, as tabelas e todos os gatilhos/procedimentos.
+Testes: O script já inclui uma massa de dados (DML) para validar todas as triggers.
+Executar Relatório: Para visualizar a inteligência financeira em ação, utilize o comando:
+call sp_fechamento_financeiro_mensal(3, 2026);
