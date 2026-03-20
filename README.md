@@ -29,7 +29,7 @@ O sistema conta com a procedure `sp_fechamento_financeiro_mensal`, que permite a
 * Valores pendentes (**Em aberto**).
 * Faturamento total previsto.
 
-## 📂 Instruções de Uso
+## Instruções de Uso
 
 1.  **Definição (DDL):** Execute o script principal para criar o Schema, tabelas, constraints e gatilhos.
 2.  **Manipulação (DML):** O script já inclui uma massa de dados de teste para validar as chaves estrangeiras e o funcionamento das Triggers.
